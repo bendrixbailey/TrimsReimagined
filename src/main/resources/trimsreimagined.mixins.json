@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "com.trimsreimagined.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractBlockMixin",
+    "ArmorTrimTooltipMixin",
+    "EndermanMixin",
+    "EnderPearlMixin",
+    "HungerManagerMixin",
+    "LivingEntityMixin",
+    "PiglinBrainMixin",
+    "PlayerMixin",
+    "SculkShriekerMixin",
+    "ShulkerBulletMixin",
+    "TrimTooltipMixin",
+    "WardenEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

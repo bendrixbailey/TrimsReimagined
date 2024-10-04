@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "trimsreimagined",
+	"version": "${version}",
+	"name": "Trims Reimagined",
+	"description": "Adds effects to the player based on what trims they currently have on their armor.",
+	"authors": [
+		"bendrix"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/trimsreimagined/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.trimsreimagined.TrimsReimagined"
+		],
+		"client": [
+			"com.trimsreimagined.TrimsReimaginedClient"
+		]
+	},
+	"mixins": [
+      "trimsreimagined.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.5",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fabric-key-binding-api-v1": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
