@@ -37,6 +37,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -64,6 +65,9 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
     public void trimsreimagined$toggleTrimEffects(){
         TrimsReimagined.LOGGER.info("Trim effect toggled!");
         this.effectsEnabled = !this.effectsEnabled;
+        if(!this.effectsEnabled) { //clear effects if theyre on the player (only clears effects that sometimes persist)
+            resetPlayerStatusEffects();
+        }
     }
 
     public boolean trimsreimagined$getTrimEffectStatus(){
@@ -94,10 +98,6 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     public void updateTrimCounts(CallbackInfo ci) {
-
-        TrimsReimagined.LOGGER.info(String.valueOf(this.effectsEnabled));
-        TrimsReimagined.LOGGER.info(this.getName().getString());
-
         ItemStack helmetItem = this.inventory.getArmorStack(3);
         ItemStack chestplateItem = this.inventory.getArmorStack(2);
         ItemStack leggingsItem = this.inventory.getArmorStack(1);
@@ -110,7 +110,7 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
 
         String biomePlayerIsIn = this.getWorld().getBiome(this.getBlockPos()).getIdAsString();
 
-        if(helmetItem.getItem() instanceof ArmorItem) {
+        if (helmetItem.getItem() instanceof ArmorItem) {
             if (helmetItem.getComponents().get(DataComponentTypes.TRIM) != null) {
                 String trimTypeString = Objects.requireNonNull(helmetItem.getComponents().get(DataComponentTypes.TRIM)).getPattern().value().assetId().toString();
                 if (trimTypeString.split(":").length > 1) {
@@ -119,7 +119,7 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
                 }
             }
         }
-        if(chestplateItem.getItem() instanceof ArmorItem) {
+        if (chestplateItem.getItem() instanceof ArmorItem) {
             if (chestplateItem.getComponents().get(DataComponentTypes.TRIM) != null) {
                 String trimTypeString = Objects.requireNonNull(chestplateItem.getComponents().get(DataComponentTypes.TRIM)).getPattern().value().assetId().toString();
                 if (trimTypeString.split(":").length > 1) {
@@ -128,7 +128,7 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
                 }
             }
         }
-        if(leggingsItem.getItem() instanceof ArmorItem) {
+        if (leggingsItem.getItem() instanceof ArmorItem) {
             if (leggingsItem.getComponents().get(DataComponentTypes.TRIM) != null) {
                 String trimTypeString = Objects.requireNonNull(leggingsItem.getComponents().get(DataComponentTypes.TRIM)).getPattern().value().assetId().toString();
                 if (trimTypeString.split(":").length > 1) {
@@ -137,7 +137,7 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
                 }
             }
         }
-        if(bootsItem.getItem() instanceof ArmorItem) {
+        if (bootsItem.getItem() instanceof ArmorItem) {
             if (bootsItem.getComponents().get(DataComponentTypes.TRIM) != null) {
                 String trimTypeString = Objects.requireNonNull(bootsItem.getComponents().get(DataComponentTypes.TRIM)).getPattern().value().assetId().toString();
                 if (trimTypeString.split(":").length > 1) {
@@ -220,6 +220,11 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
             }
             armorPieceType.put(trimName, 1);
         }
+        else {
+            for (String trim : TrimUtils.getListOfVanillaTrims()) {  // Initialize as if player was wearing no trims
+                armorPieceType.put(trim, 0);
+            }
+        }
     }
 
     @Unique
@@ -259,6 +264,89 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
                             true
                     ));
                 }
+            }
+        }
+    }
+
+    /**
+     * This method is needed because toggling the armor effects sometimes locks previously boosted effects(ex. haste 2)
+     * and applies it permanently. This collects what effects the player has, and reapplies them so they dont lose
+     * important ones, like hero of the village, bad omen, etc.
+     */
+    @Unique
+    public void resetPlayerStatusEffects() {
+        Collection<StatusEffectInstance> statusEffects = this.getStatusEffects();
+        this.clearStatusEffects();
+        for (StatusEffectInstance instance : statusEffects) {
+            if(instance.equals(StatusEffects.HERO_OF_THE_VILLAGE)) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.HERO_OF_THE_VILLAGE,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
+            }
+            if(instance.equals(StatusEffects.HASTE) && instance.getAmplifier() == 2) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.HERO_OF_THE_VILLAGE,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
+            }
+            if(instance.equals(StatusEffects.BAD_OMEN)) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.BAD_OMEN,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
+            }
+            if(instance.equals(StatusEffects.MINING_FATIGUE)) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.MINING_FATIGUE,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
+            }
+            if(instance.equals(StatusEffects.INVISIBILITY)) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.INVISIBILITY,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
+            }
+            if(instance.equals(StatusEffects.NAUSEA)) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.NAUSEA,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
+            }
+            if(instance.equals(StatusEffects.DARKNESS)) {
+                this.addStatusEffect(new StatusEffectInstance(
+                        StatusEffects.DARKNESS,
+                        instance.getDuration(),
+                        instance.getAmplifier(),
+                        false,
+                        false,
+                        true
+                ));
             }
         }
     }
