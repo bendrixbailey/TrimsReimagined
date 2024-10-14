@@ -1,8 +1,6 @@
 package com.trimsreimagined.mixin;
 
-import com.trimsreimagined.TrimsReimagined;
 import com.trimsreimagined.utils.TrimUtils;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SmithingTemplateItem;
@@ -35,6 +33,14 @@ public abstract class TrimTooltipMixin {
 
     @Shadow @Final private Text titleText;
 
+    /**
+     * Appends trim effects onto the existing Armor Trim item tooltip
+     * @param stack
+     * @param context
+     * @param tooltip
+     * @param type
+     * @param ci
+     */
     @Inject( method = "appendTooltip", at = @At("TAIL"))
     public void appendToolTip0(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci){
         //TODO refactor the below, very fragile.

@@ -41,7 +41,6 @@ public abstract class AbstractBlockMixin {
                 if(builder.get(LootContextParameters.TOOL) != null) {
                     if(builder.get(LootContextParameters.TOOL).getItem() instanceof AxeItem){
                         if(player.hasStatusEffect(Registries.STATUS_EFFECT.getEntry(ModEffects.SHAPER))) {
-                            //Player broke the item with an axe and has the loggers intuition effect
                             RegistryEntry<Enchantment> silkTouch = builder.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.SILK_TOUCH).orElseThrow();
                             if(!builder.get(LootContextParameters.TOOL).getEnchantments().getEnchantments().contains(silkTouch)) {
                                 ItemStack newAxe = builder.get(LootContextParameters.TOOL).copy();
@@ -56,7 +55,6 @@ public abstract class AbstractBlockMixin {
                     }
                 }
             }
-
         }
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -150,6 +151,7 @@ public abstract class LivingEntityMixin extends Entity{
 
 
 
+    @Unique
     public Integer getRandomNumberInRange(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;

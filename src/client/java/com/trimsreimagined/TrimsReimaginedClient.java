@@ -1,6 +1,5 @@
 package com.trimsreimagined;
 
-import com.trimsreimagined.networking.TrimMessages;
 import com.trimsreimagined.networking.packet.TrimTogglePayload;
 import com.trimsreimagined.utils.PlayerMixinMethodAccess;
 import net.fabricmc.api.ClientModInitializer;
@@ -9,9 +8,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.option.StickyKeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class TrimsReimaginedClient implements ClientModInitializer {
@@ -22,9 +19,6 @@ public class TrimsReimaginedClient implements ClientModInitializer {
 
 	public static void registerKeyInputs() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-//			if(toggleTrimEffectsKey.isPressed()) {
-//				ClientPlayNetworking.send(new TrimTogglePayload(true));
-//			}
 			if(toggleTrimEffectsKey.wasPressed()) {
 				ClientPlayNetworking.send(new TrimTogglePayload(true));
 				ClientPlayerEntity playerEntity = client.player;
@@ -46,7 +40,6 @@ public class TrimsReimaginedClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 		register();
 	}
 }

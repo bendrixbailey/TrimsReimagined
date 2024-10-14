@@ -146,6 +146,8 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
                 }
             }
         }
+
+        // Calls to apply status effects
         updateSentryTrimEffects();
         updateCoastTrimEffects();
         updateWildTrimEffects(biomePlayerIsIn);
@@ -157,11 +159,17 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
         updateTideTrimEffects();
         updateHostTrimEffects();
 
+        //apply visual effect
         applyTrimSetBonusEffect();
     }
 
 
-
+    /**
+     * Mixin to adjust damage reductions to the player based on enemy attacking
+     * @param source
+     * @param amount
+     * @return
+     */
     @ModifyArg(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"), index = 1)
     private float scaleDamageForTrimsModifyVariable(DamageSource source, float amount) {
         float damageDealtToPlayer = amount;
@@ -177,6 +185,10 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
         return damageDealtToPlayer;
     }
 
+    /**
+     * Mixin to adjust attack speed based on trims worn
+     * @param ci
+     */
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
     private void speedUpAttackSpeedIfTrimBonus(CallbackInfo ci) {
         if(trimsreimagined$getTrimCountForTrimType("flow").equals(4)) {
@@ -184,6 +196,10 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
         }
     }
 
+    /**
+     * Mixin to adjust block interaction range based on trims worn and item in main hand
+     * @param cir
+     */
     @Inject(method = "getBlockInteractionRange", at = @At(value = "TAIL"), cancellable = true)
     public void modifyBlockReachForTrims(CallbackInfoReturnable<Double> cir) {
         ItemStack mainHandItemStack  = this.getMainHandStack();
@@ -249,6 +265,10 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
         return 0;
     }
 
+    /**
+     * Applies a status effect to the player that has the name of the trim set bonus. Status effect is non-functional,
+     * simply a way to display to the player the bonus is active.
+     */
     @Unique
     public void applyTrimSetBonusEffect() {
         for (String trim : TrimUtils.getListOfVanillaTrims()) {
@@ -375,6 +395,12 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
         return damageDealtToPlayer;
     }
 
+    /**
+     * Helper for determining if entity is a vex attacking the player
+     * @param attacker
+     * @param damageDealtToPlayer
+     * @return
+     */
     @Unique
     private float updateVexTrimEffectsBlockVexDamage(Entity attacker, float damageDealtToPlayer) {
         if(trimsreimagined$getTrimCountForTrimType("vex").equals(4)){
@@ -388,6 +414,11 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
         }
     }
 
+    /**
+     * Helper for calculating reduced fire damage amount
+     * @param damageDealtToPlayer
+     * @return
+     */
     @Unique
     private float updateRibTrimEffectsReduceFireDamage(float damageDealtToPlayer) {
         Integer ribTrimCount = trimsreimagined$getTrimCountForTrimType("rib");
@@ -396,7 +427,7 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinMet
     }
 
     /**
-     * Methods below handle status effects on the player based on trim type
+     * Methods below handle status effects on the player based on trim type.
      */
 
     @Unique

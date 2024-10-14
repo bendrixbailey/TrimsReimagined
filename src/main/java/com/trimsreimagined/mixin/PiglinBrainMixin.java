@@ -18,7 +18,7 @@ import java.util.List;
 public abstract class PiglinBrainMixin {
 
     @Shadow
-    protected static void drop(PiglinEntity piglin, List<ItemStack> items, Vec3d pos) {
+    private static void drop(PiglinEntity piglin, List<ItemStack> items, Vec3d pos) {
     }
 
     @Inject(method = "dropBarteredItem(Lnet/minecraft/entity/mob/PiglinEntity;Lnet/minecraft/entity/player/PlayerEntity;Ljava/util/List;)V", at = @At("TAIL"))

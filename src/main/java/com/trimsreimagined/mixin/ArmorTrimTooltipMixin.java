@@ -1,34 +1,26 @@
 package com.trimsreimagined.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.trimsreimagined.TrimsReimagined;
 import com.trimsreimagined.utils.TrimUtils;
-import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.resource.featuretoggle.ToggleableFeature;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public abstract class ArmorTrimTooltipMixin implements ComponentHolder {
@@ -37,9 +29,13 @@ public abstract class ArmorTrimTooltipMixin implements ComponentHolder {
 
     @Shadow public abstract Item getItem();
 
+    @Unique
     private static final Formatting TITLE_FORMATTING = Formatting.GRAY;
+    @Unique
     private static final Formatting DESCRIPTION_FORMATTING = Formatting.BLUE;
+    @Unique
     private static final Text EFFECTS_TEXT = Text.translatable("mixin.trimsreimagined.effecttitle").formatted(TITLE_FORMATTING);
+    @Unique
     private static final Text SET_BONUS_TEXT = Text.translatable("mixin.trimsreimagined.setbonustitle").formatted(TITLE_FORMATTING);
 
     @Inject(method = "getTooltip", at = @At(value = "TAIL"))

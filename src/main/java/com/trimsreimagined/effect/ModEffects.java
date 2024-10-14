@@ -57,45 +57,27 @@ public class ModEffects {
     }
 
     public static StatusEffect getStatusEffectFromTrimName(String trimName) {
-        switch (trimName) {
-            case "shaper":
-                return SHAPER;
-            case "sentry":
-                return SENTRY;
-            case "vex":
-                return VEX;
-            case "wild":
-                return WILD;
-            case "coast":
-                return COAST;
-            case "dune":
-                return DUNE;
-            case "wayfinder":
-                return WAYFINDER;
-            case "raiser":
-                return RAISER;
-            case "host":
-                return HOST;
-            case "ward":
-                return WARD;
-            case "silence":
-                return SILENCE;
-            case "tide":
-                return TIDE;
-            case "snout":
-                return SNOUT;
-            case "rib":
-                return RIB;
-            case "eye":
-                return EYE;
-            case "spire":
-                return SPIRE;
-            case "bolt":
-                return BOLT;
-            case "flow":
-                return FLOW;
-        }
-        return null;
+        return switch (trimName) {
+            case "shaper" -> SHAPER;
+            case "sentry" -> SENTRY;
+            case "vex" -> VEX;
+            case "wild" -> WILD;
+            case "coast" -> COAST;
+            case "dune" -> DUNE;
+            case "wayfinder" -> WAYFINDER;
+            case "raiser" -> RAISER;
+            case "host" -> HOST;
+            case "ward" -> WARD;
+            case "silence" -> SILENCE;
+            case "tide" -> TIDE;
+            case "snout" -> SNOUT;
+            case "rib" -> RIB;
+            case "eye" -> EYE;
+            case "spire" -> SPIRE;
+            case "bolt" -> BOLT;
+            case "flow" -> FLOW;
+            default -> null;
+        };
     }
 
 }
